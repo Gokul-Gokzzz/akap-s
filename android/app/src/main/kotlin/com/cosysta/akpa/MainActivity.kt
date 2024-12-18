@@ -1,4 +1,4 @@
-package com.example.akpa
+package com.cosysta.akpa
 
 import io.flutter.embedding.android.FlutterActivity
 
