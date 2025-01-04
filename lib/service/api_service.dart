@@ -24,49 +24,48 @@ class ApiService {
   }
 
   //---login---Service---//
-Future<LoginModel?> login(String username, String password) async {
-  const url = "https://akpa.in/santhwanam/api/v1/auth/login";
+  Future<LoginModel?> login(String username, String password) async {
+    const url = "https://akpa.in/santhwanam/api/v1/auth/login";
 
-  try {
-    final response = await _dio.post(
-      url,
-      data: {
-        'username': username,
-        'password': password,
-      },
-    );
+    try {
+      final response = await _dio.post(
+        url,
+        data: {
+          'username': username,
+          'password': password,
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final data = response.data;
-      
-      // Log the response data properly
-      log(data['data'].toString());
-      
-      if (data['status'] == true) {
-        final loginModel = LoginModel.fromMap(data['data']);
+      if (response.statusCode == 200) {
+        final data = response.data;
 
-        // Save member_id to SharedPreferences
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (loginModel.id != null) {
-          await StoreService.setLoginUserId(loginModel.id!.toString());
-          await prefs.setString('member_id', loginModel.id!.toString());
+        // Log the response data properly
+        log(data['data'].toString());
+
+        if (data['status'] == true) {
+          final loginModel = LoginModel.fromMap(data['data']);
+
+          // Save member_id to SharedPreferences
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          if (loginModel.id != null) {
+            await StoreService.setLoginUserId(loginModel.id!.toString());
+            await prefs.setString('member_id', loginModel.id!.toString());
+          }
+
+          return loginModel;
+        } else {
+          log('Login failed with message: ${data['message']}');
+          return null;
         }
-
-        return loginModel;
       } else {
-        log('Login failed with message: ${data['message']}');
+        log('Login failed with status code: ${response.statusCode}');
         return null;
       }
-    } else {
-      log('Login failed with status code: ${response.statusCode}');
+    } catch (e) {
+      log('Login failed with error: $e');
       return null;
     }
-  } catch (e) {
-    log('Login failed with error: $e');
-    return null;
   }
-}
-
 
   Future<void> updateDeviceToken(String username) async {
     final url = "${baseUrl}user/update_device_token";
@@ -242,8 +241,8 @@ Future<LoginModel?> login(String username, String password) async {
         log('service help');
         return HelpModel(list: ListClass(data: []));
       }
-    } catch (e) {
-      log('Error service: $e');
+    } catch (e, s) {
+      log('Error service: $e', stackTrace: s);
       throw Exception('Failed to fetch help list');
     }
   }

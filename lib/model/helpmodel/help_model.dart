@@ -45,7 +45,7 @@ class HelpModel {
   factory HelpModel.fromMap(Map<String, dynamic> json) => HelpModel(
     accountAmount: json["account_amount"],
     helpGiven: json["help_given"],
-    helpGivenYear: json["help_given_year"],
+    helpGivenYear: json["help_given_year"]?.toString(),
     balanceAmount: json["balance_amount"],
     status: json["status"],
     message: json["message"],

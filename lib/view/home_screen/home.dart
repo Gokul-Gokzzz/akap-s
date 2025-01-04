@@ -119,206 +119,204 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             final userProfile = snapshot.data![1] as UserProfile;
 
             return Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                          child: Image.asset(
-                            'assets/menus.png',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
+              padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        child: Image.asset(
+                          'assets/menus.png',
+                          height: 30,
+                          width: 30,
+                          color: Colors.black,
                         ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Search',
-                                hintStyle: const TextStyle(color: Colors.black54),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                suffixIcon: Container(
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade400,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Icon(Icons.search, color: Colors.black),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              hintStyle: const TextStyle(color: Colors.black54),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              suffixIcon: Container(
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade400,
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
+                                child: const Icon(Icons.search, color: Colors.black),
                               ),
-                              style: const TextStyle(color: Colors.black),
                             ),
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                      ],
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: (userProfile.status == 1 && userProfile.balanceAmount >= 0) ? Colors.green : Colors.red,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          (userProfile.status == 1 && userProfile.balanceAmount >= 0) ? 'Active' : 'Inactive',
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 7),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: getStatusColor(userProfile.balanceAmount),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          getAccountStatus(userProfile.balanceAmount),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  if (userProfile.balanceAmount < 0)
+                    Center(
+                      child: FadeTransition(
+                        opacity: opacityAnimation,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: const Text(
+                            'Recharge Your Account Immediately',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: (userProfile.status == 1 && userProfile.balanceAmount >= 0) ? Colors.green : Colors.red,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            (userProfile.status == 1 && userProfile.balanceAmount >= 0) ? 'Active' : 'Inactive',
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                          ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        const SizedBox(width: 7),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: getStatusColor(userProfile.balanceAmount),
-                            borderRadius: BorderRadius.circular(20),
+                        child: buildProfileImage(config, userProfile),
+                      ),
+                      const SizedBox(width: 5),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userProfile.name,
+                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
                           ),
-                          child: Text(
-                            getAccountStatus(userProfile.balanceAmount),
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          Text(
+                            userProfile.districtName,
+                            style: const TextStyle(color: Colors.black),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  if (userProfile.balanceAmount < 0)
+                    buildCard(
+                      context,
+                      'Transactions',
+                      '',
+                      'assets/transactionimg.png',
+                      LinearGradient(
+                        colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      Colors.white,
+                      const TransactionScreen(),
+                    ),
+                  if (userProfile.balanceAmount >= 0) ...[
+                    Text(
+                      'Last Payment Rs: $lastPaymentAmount on $lastPaymentDate',
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black),
                     ),
                     const SizedBox(height: 5),
-                    if (userProfile.balanceAmount < 0)
-                      Center(
-                        child: FadeTransition(
-                          opacity: opacityAnimation,
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: const Text(
-                              'Recharge Your Account Immediately',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
+                    buildCard(
+                      context,
+                      'Dashboard',
+                      '',
+                      'assets/dashboard.jpg',
+                      LinearGradient(
+                        colors: [Color(0xFFFFC107), Color(0xFFFF9800)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: buildProfileImage(config, userProfile),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              userProfile.name,
-                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                            Text(
-                              userProfile.districtName,
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ],
+                      Colors.white,
+                      const DashBoardScreen(),
                     ),
-                    const SizedBox(height: 20),
-                    if (userProfile.balanceAmount < 0)
-                      buildCard(
-                        context,
-                        'Transactions',
-                        '',
-                        'assets/transactionimg.png',
-                        LinearGradient(
-                          colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        Colors.white,
-                        const TransactionScreen(),
+                    const SizedBox(height: 5),
+                    buildCard(
+                      context,
+                      'Transactions',
+                      '',
+                      'assets/transactionimg.png',
+                      LinearGradient(
+                        colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                    if (userProfile.balanceAmount >= 0) ...[
-                      Text(
-                        'Last Payment Rs: $lastPaymentAmount on $lastPaymentDate',
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black),
+                      Colors.white,
+                      const TransactionScreen(),
+                    ),
+                    const SizedBox(height: 5),
+                    buildCard(
+                      context,
+                      'Help Provided list',
+                      '',
+                      'assets/help img.png',
+                      LinearGradient(
+                        colors: [Color(0xFF66BB6A), Color(0xFF388E3C)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      const SizedBox(height: 10),
-                      buildCard(
-                        context,
-                        'Dashboard',
-                        '',
-                        'assets/dashboard.jpg',
-                        LinearGradient(
-                          colors: [Color(0xFFFFC107), Color(0xFFFF9800)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        Colors.white,
-                        const DashBoardScreen(),
+                      Colors.white,
+                      const HelpProvidedList(),
+                    ),
+                    const SizedBox(height: 5),
+                    buildCard(
+                      context,
+                      'Death list',
+                      '',
+                      'assets/death list.jpg',
+                      LinearGradient(
+                        colors: [Color(0xFFEF5350), Color(0xFFC62828)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      const SizedBox(height: 10),
-                      buildCard(
-                        context,
-                        'Transactions',
-                        '',
-                        'assets/transactionimg.png',
-                        LinearGradient(
-                          colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        Colors.white,
-                        const TransactionScreen(),
-                      ),
-                      const SizedBox(height: 10),
-                      buildCard(
-                        context,
-                        'Help Provided list',
-                        '',
-                        'assets/help img.png',
-                        LinearGradient(
-                          colors: [Color(0xFF66BB6A), Color(0xFF388E3C)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        Colors.white,
-                        const HelpProvidedList(),
-                      ),
-                      const SizedBox(height: 10),
-                      buildCard(
-                        context,
-                        'Death list',
-                        '',
-                        'assets/death list.jpg',
-                        LinearGradient(
-                          colors: [Color(0xFFEF5350), Color(0xFFC62828)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        Colors.white,
-                        const DeathListPage(),
-                      ),
-                    ]
-                  ],
-                ),
+                      Colors.white,
+                      const DeathListPage(),
+                    ),
+                  ]
+                ],
               ),
             );
           },
