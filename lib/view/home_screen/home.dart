@@ -9,6 +9,7 @@ import 'package:akpa/view/dashboard/dashboard.dart';
 import 'package:akpa/view/death_details/death_list.dart';
 import 'package:akpa/view/drawer/drawer.dart';
 import 'package:akpa/view/help_provided_list/help_provided_list.dart';
+import 'package:akpa/view/home_screen/widgets/webview_page.dart';
 import 'package:akpa/view/home_screen/widgets/widget.dart';
 import 'package:akpa/view/transaction/transaction.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late Future<Config> config;
   late Future<UserProfile> userProfile;
   late Future<List<Transaction>> transactionList;
@@ -124,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -137,59 +140,81 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                       ),
                       const SizedBox(width: 20),
-                      Expanded(
-                        child: Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Search',
-                              hintStyle: const TextStyle(color: Colors.black54),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              suffixIcon: Container(
-                                width: 60,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade400,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Icon(Icons.search, color: Colors.black),
-                              ),
+                      // Expanded(
+                      //   child: Container(
+                      //     height: 40,
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.grey.shade300,
+                      //       borderRadius: BorderRadius.circular(20),
+                      //     ),
+                      //     child: TextField(
+                      //       decoration: InputDecoration(
+                      //         hintText: 'Search',
+                      //         hintStyle: const TextStyle(color: Colors.black54),
+                      //         border: InputBorder.none,
+                      //         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      //         suffixIcon: Container(
+                      //           width: 60,
+                      //           decoration: BoxDecoration(
+                      //             color: Colors.grey.shade400,
+                      //             borderRadius: BorderRadius.circular(20),
+                      //           ),
+                      //           child: const Icon(Icons.search, color: Colors.black),
+                      //         ),
+                      //       ),
+                      //       style: const TextStyle(color: Colors.black),
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(width: 10),
+                      TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WebViewPage(  ),
                             ),
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
+                          );
+                        },
+                        icon: const Icon(Icons.web_stories_rounded),
+                        label: const Text("Day Book"),
+                      )
                     ],
                   ),
                   const SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: (userProfile.status == 1 && userProfile.balanceAmount >= 0) ? Colors.green : Colors.red,
+                          color: (userProfile.status == 1 &&
+                              userProfile.balanceAmount >= 0)
+                              ? Colors.green
+                              : Colors.red,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          (userProfile.status == 1 && userProfile.balanceAmount >= 0) ? 'Active' : 'Inactive',
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          (userProfile.status == 1 &&
+                              userProfile.balanceAmount >= 0)
+                              ? 'Active'
+                              : 'Inactive',
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(width: 7),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: getStatusColor(userProfile.balanceAmount),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           getAccountStatus(userProfile.balanceAmount),
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -229,7 +254,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         children: [
                           Text(
                             userProfile.name,
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
                           ),
                           Text(
                             userProfile.districtName,
@@ -257,7 +285,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   if (userProfile.balanceAmount >= 0) ...[
                     Text(
                       'Last Payment Rs: $lastPaymentAmount on $lastPaymentDate',
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black),
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
                     ),
                     const SizedBox(height: 5),
                     buildCard(
@@ -362,7 +393,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   //     );
   //   }
   // }
-  Widget buildCard(BuildContext context, String title, String subtitle, String imagePath, Gradient bgGradient, Color textColor, Widget page) {
+  Widget buildCard(BuildContext context, String title, String subtitle,
+      String imagePath, Gradient bgGradient, Color textColor, Widget page) {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) => page));
@@ -379,26 +411,36 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           ),
           padding: const EdgeInsets.all(15),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center, // Center contents vertically
-            mainAxisAlignment: MainAxisAlignment.center, // Center contents horizontally
+            crossAxisAlignment:
+            CrossAxisAlignment.center, // Center contents vertically
+            mainAxisAlignment:
+            MainAxisAlignment.center, // Center contents horizontally
             children: [
               Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, // Center text vertically
-                  crossAxisAlignment: CrossAxisAlignment.center, // Center text horizontally
+                  mainAxisAlignment:
+                  MainAxisAlignment.center, // Center text vertically
+                  crossAxisAlignment:
+                  CrossAxisAlignment.center, // Center text horizontally
                   children: [
                     const SizedBox(
                       height: 20,
                     ),
                     Text(
                       title,
-                      style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: textColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center, // Align title to center
                     ),
                     const SizedBox(height: 5),
                     Text(
                       subtitle,
-                      style: TextStyle(color: textColor, fontSize: 15, fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          color: textColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400),
                       textAlign: TextAlign.center, // Align subtitle to center
                     ),
                   ],
